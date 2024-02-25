@@ -9,3 +9,7 @@ This project is catered to those who need quick and easy methods to take a sourc
 - Uses native async modules
 - Uses CV2 and Numpy
 - Low resource consumption
+
+# File Support
+
+- *mp4, *jpg, *jpeg
