@@ -46,7 +46,7 @@ class threadings:
         threads = [6]
         print(f"Starting worker thread with: {threads} threads")
         for i in range(1, 10):
-            t = threading.Thread(target=call_class_deepsplit(data_folder, current_frame_count))
+            t = threading.Thread(target=call_class_deepsplit, args=(data_folder, current_frame_count))
             threads.append(t)
             t.start()
         for t in threads:
