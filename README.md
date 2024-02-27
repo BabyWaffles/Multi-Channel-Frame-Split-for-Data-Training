@@ -12,4 +12,9 @@ This project is catered to those who need quick and easy methods to take a sourc
 
 # File Support
 
-- *mp4, *jpg, *jpeg
+[Latest]
+- *.mp4, *.jpg, *.jpeg
+- *.png, *.tiff, *.bmp
+- *.mkv, *.avi*, *.gif
+- *.wmv, *.flv, *.mov
+- *.webm
