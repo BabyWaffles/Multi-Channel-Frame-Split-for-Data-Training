@@ -31,27 +31,34 @@ data_folder = f"{os.getcwd()}\cvat-dataInference"
 
 class deepsplitting:
     def deepSplit_processed(frame, current_frame_count, processed_path):
-        frames= cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        current_frame_queue = frames.copy()
-        b,g,r = cv2.split(current_frame_queue)
-        #convert to gray
-        gray = cv2.cvtColor(current_frame_queue, cv2.COLOR_BGR2GRAY)
-        file_name=f"split_frame_{current_frame_count}"
-        file_write(processed_path, file_name, r,g,b,gray, frame)
-        print(f"Frame {current_frame_count} processed successfully")
+        try:
+            frames= cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            current_frame_queue = frames.copy()
+            b,g,r = cv2.split(current_frame_queue)
+            #convert to gray
+            gray = cv2.cvtColor(current_frame_queue, cv2.COLOR_BGR2GRAY)
+            file_name=f"split_frame_{current_frame_count}"
+            file_write(processed_path, file_name, r,g,b,gray, frame)
+            print(f"Frame {current_frame_count} processed successfully")
+        except Exception as e:
+            print(f"Error processing frame {current_frame_count}: {e}")
 
 
 class threadings: 
-    async def worker_threads(data_folder, current_frame_count):
-        threads = [6]
+    def worker_threads(data_folder, current_frame_count):
+        #asyncio.gather(call_class_deepsplit(data_folder, current_frame_count))
+        call_class_deepsplit(data_folder, current_frame_count)
+    async def workthreading(data_folder, current_frame_count):
+        threads = []
         print(f"Starting worker thread with: {threads} threads")
-        for i in range(1, 10):
-            t = threading.Thread(target=call_class_deepsplit, args=(data_folder, current_frame_count))
+        for i in range(1):
+            t = threading.Thread(target=threadings.worker_threads, args=(data_folder, current_frame_count))
             threads.append(t)
             t.start()
         for t in threads:
             t.join()
         print("Threads completed successfully")
+        
 
 def file_write(path, file_name, r,g,b,gray, normal):
     with open(path + file_name, 'w') as f:
@@ -70,12 +77,12 @@ def call_class_deepsplit(folder_path, current_frame_count):
     processed_path = new_directory(f"{folder_path}\processed_imgs")
     print(f"Processed path: {processed_path}")
     for file in files:
-        if file.endswith(".jpg"):
+        if file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")):
             logging.info(f"Processing file: {file}")
             img = cv2.imread(f"{folder_path}/{file}")   
             deepsplitting.deepSplit_processed(img, current_frame_count, processed_path)
             current_frame_count += 1
-        elif file.endswith(".mp4"):
+        elif file.endswith((".mp4",".mkv", ".avi", "gif", ".wmv", ".flv", ".mov", ".webm")):
             logging.info(f"Processing video: {file}")
             cap = cv2.VideoCapture(f"{folder_path}/{file}")
             while cap.isOpened():
@@ -87,4 +94,4 @@ def call_class_deepsplit(folder_path, current_frame_count):
             cv2.destroyAllWindows()
 
 #call_class_deepsplit(data_folder, current_frame_count)
-loop = asyncio.get_event_loop().run_until_complete(threadings.worker_threads(data_folder, current_frame_count))
+asyncio.get_event_loop().run_until_complete(threadings.workthreading(data_folder, current_frame_count))
