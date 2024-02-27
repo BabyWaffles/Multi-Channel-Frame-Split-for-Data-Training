@@ -82,7 +82,7 @@ def call_class_deepsplit(folder_path, current_frame_count):
             img = cv2.imread(f"{folder_path}/{file}")   
             deepsplitting.deepSplit_processed(img, current_frame_count, processed_path)
             current_frame_count += 1
-        elif file.endswith((".mp4",".mkv", ".avi", "gif", ".wmv", ".flv", ".mov", ".webm")):
+        elif file.endswith((".mp4",".mkv", ".avi", ".gif", ".wmv", ".flv", ".mov", ".webm")):
             logging.info(f"Processing video: {file}")
             cap = cv2.VideoCapture(f"{folder_path}/{file}")
             while cap.isOpened():
