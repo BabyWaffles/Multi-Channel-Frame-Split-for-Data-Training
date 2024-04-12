@@ -21,5 +21,5 @@ This project is catered to those who need quick and easy methods to take a sourc
 
 # Changelog
 
-[Latest]
+[12 April 2024]
 - Enables Auto Annotation of Existing Annotation Coordinates.
