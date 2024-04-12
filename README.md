@@ -18,3 +18,8 @@ This project is catered to those who need quick and easy methods to take a sourc
 - *.mkv, *.avi*, *.gif
 - *.wmv, *.flv, *.mov
 - *.webm
+
+# Changelog
+
+[Latest]
+- Enables Auto Annotation of Existing Annotation Coordinates.
