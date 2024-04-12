@@ -29,7 +29,7 @@ class GetCWD:
             else:
                 return self.joindirw
         except error as oserr:
-            error(f"Error creating directory: {oserr}")	
+            oserr(f"Error creating directory: {oserr}")	
             return None
         except systemRecurrsiveNull as srn:
             raise systemRecurrsiveNull(f"Recursively returned NULL w/ err: {srn}")	
