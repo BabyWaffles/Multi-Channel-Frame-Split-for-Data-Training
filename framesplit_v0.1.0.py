@@ -4,8 +4,10 @@ from logging import info, error
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 from asyncio import gather, get_event_loop
+from time import time
 
 print("Initializing Frame Splitter...")
+start = time()
 
 class systemRecurrsiveNull:
     pass
@@ -54,37 +56,38 @@ class deepsplit:
         self.file_name = None
         self.threadexecutor = ThreadPoolExecutor(max_workers=5)
 
-    async def deepSplit_processed(self):
+    def deepSplit_processed(self):
         try:
             self.frame = cvtColor(self.frame, COLOR_RGB2BGR)
             self.queue = self.frame.copy()
-            self.blue,self.green,self.red = split(self.queue)
+            self.blue, self.green, self.red = split(self.queue)
             self.gray = cvtColor(self.queue, COLOR_BGR2GRAY)
             self.file_name=f"split_frame_{self.current_frame_count}"
-            await self.file_processing()
+            self.file_processing()
             print(f"Frame {self.current_frame_count} processed successfully")
 
         except Exception as e:
             error(f"Error processing frame {self.current_frame_count}: {e}")
-            raise processingNullFrames(f"Error processing frame {self.current_frame_count}: {e}")
+            #raise processingNullFrames(f"Error processing frame {self.current_frame_count}: {e}")
     
-    async def file_processing(self):
-        with open(self.processed_path + self.file_name) as file:
-            self.imwrite(f"{self.processed_path}/{self.file_name}_r.jpg", self.red)
-            self.async_imwrite(f"{self.processed_path}/{self.file_name}_g.jpg", self.green)
-            self.async_imwrite(f"{self.processed_path}/{self.file_name}_b.jpg", self.blue)
-            self.async_imwrite(f"{self.processed_path}/{self.file_name}_gray.jpg", self.gray)
-            self.async_imwrite(f"{self.processed_path}/{self.file_name}_normal.jpg", self.queue)
+    def file_processing(self):
+        with open(self.processed_path + self.file_name, 'w') as file:
+            imwrite(f"{self.processed_path}/{self.file_name}_r.jpg", self.red)
+            imwrite(f"{self.processed_path}/{self.file_name}_g.jpg", self.green)
+            imwrite(f"{self.processed_path}/{self.file_name}_b.jpg", self.blue)
+            imwrite(f"{self.processed_path}/{self.file_name}_gray.jpg", self.gray)
+            imwrite(f"{self.processed_path}/{self.file_name}_normal.jpg", self.queue)
             info(f"Frame {self.current_frame_count} processed successfully")
             file.close()
-
+            
     async def async_imwrite(self, filename, img):
-        self.loop = get_event_loop()
-        await self.loop.run_in_executor(self.threadexecutor, imwrite, filename, img)
+        loop = get_event_loop()
+        await loop.run_in_executor(self.threadexecutor, imwrite, filename, img)
 
-print("Frame Splitter initialized successfully!")
+end = time()
+print(f"Frame Splitter initialized successfully with {end-start}ms!")
 
-async def lastly(folder_path, current_frame_count):
+def lastly(folder_path, current_frame_count):
     items = listdir(folder_path)
     files = [item for item in items if path.isfile(path.join(folder_path, item))]
     info(f"Files in directory: {files}")
@@ -94,7 +97,7 @@ async def lastly(folder_path, current_frame_count):
         if file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")):
             info(f"Processing file: {file}")
             img = imread(f"{folder_path}/{file}")   
-            await deepsplit(img, current_frame_count, processed_path).deepSplit_processed()
+            deepsplit(img, current_frame_count, processed_path).deepSplit_processed()
             current_frame_count.up_framecount()
         elif file.endswith((".avi", ".mp4", ".mov", ".flv")):
             info(f"Processing video: {file}")
@@ -102,7 +105,7 @@ async def lastly(folder_path, current_frame_count):
             while cap.isOpened():
                 ret, frame = cap.read()
                 if ret:
-                    await deepsplit(frame, current_frame_count, processed_path).deepSplit_processed()
+                    deepsplit(frame, current_frame_count, processed_path).deepSplit_processed()
                     current_frame_count.up_framecount()
                 else:
                     break
