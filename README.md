@@ -1,5 +1,3 @@
-# INCOMPLETE BRANCH!!!!
-
 # Multi-Channel-Frame-Split-for-Data-Training
 Takes an image or a video, split the frames into multiple color spaces and "imwrite" in an output folder
 
@@ -7,8 +5,8 @@ Takes an image or a video, split the frames into multiple color spaces and "imwr
 This project is catered to those who need quick and easy methods to take a source and split the current frame into multiple COLOR Channels for DATA Training and inferencing
 
 # Current Features
-- Multi-threaded
-- Uses native async modules
+- Multi-threaded [Removed due to broken implementation]
+- Uses native async modules [Removed due to broken implementation]
 - Uses CV2 and Numpy
 - Low resource consumption
 
