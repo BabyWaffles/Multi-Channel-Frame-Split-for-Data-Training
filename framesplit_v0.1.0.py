@@ -94,12 +94,12 @@ class lastly:
         self.process = GetCWD(f"{self.path}\processed_imgs").newdir()
         print(f"Successfully located processing path: {self.process}")
         for self.file in self.files:
-            if self.file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")):
+            if self.file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")): # <- Bug probe inserted (".uppercase won't be detected")
                 info(f"Processing file: {self.file}")
                 img = imread(f"{self.path}/{self.file}")   
                 deepsplit(img, self.frame_count, self.process).deepSplit_processed()
                 self.process.up_framecount()
-            elif self.file.endswith((".avi", ".mp4", ".mov", ".flv")):
+            elif self.file.endswith((".avi", ".mp4", ".mov", ".flv")): # <- Bug probe inserted (".uppercase won't be detected")
                 info(f"Processing video: {self.file}")
                 cap = VideoCapture(f"{self.path}/{self.file}")
                 while cap.isOpened():
