@@ -20,7 +20,7 @@ class global_framecount:
         return self.framecount
 
 class GetCWD:
-    def __init__(self, folder_name):
+    def __init__(self, folder_name) -> str :
         self.fname = folder_name
         self.dir = getcwd()
     
@@ -29,11 +29,10 @@ class GetCWD:
             self.joindirw =  path.join(self.dir, self.fname)
             if not path.exists(self.joindirw):
                 info(f"Processed img directory {self.fname} created, in {self.dir}")
-                return makedirs(self.joindirw), 
+                return makedirs(self.joindirw)
             elif self.fname == None:
                 raise systemRecurrsiveNull(f"No directory name provided!")
-            else:
-                return self.joindirw
+            return self.joindirw
         except error as oserr:
             oserr(f"Error creating directory: {oserr}")	
             return None
@@ -45,6 +44,7 @@ class deepsplit:
         self.frame = frame
         self.current_frame_count = current_frame_count.framecount
         self.processed_path = processed_path
+        self.queue = None
         self.red = None
         self.green = None
         self.blue = None
@@ -54,8 +54,9 @@ class deepsplit:
     def deepSplit_processed(self):
         try:
             self.frame = cvtColor(self.frame, COLOR_RGB2BGR)
-            self.blue, self.green, self.red = split(self.frame)
-            self.gray = cvtColor(self.frame, COLOR_BGR2GRAY)
+            self.queue = self.frame.copy()
+            self.blue, self.green, self.red = split(self.queue)
+            self.gray = cvtColor(self.queue, COLOR_BGR2GRAY)
             self.file_name= f"split_frame_{self.current_frame_count}"
             self.file_processing()
             print(f"Frame {self.current_frame_count} processed successfully")
@@ -94,12 +95,12 @@ class lastly:
         self.process = GetCWD(f"{self.path}\processed_imgs").newdir()
         print(f"Successfully located processing path: {self.process}")
         for self.file in self.files:
-            if self.file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")): # <- Bug probe inserted (".uppercase won't be detected")
+            if self.file.endswith((".jpg" or ".JPG", ".png" or ".PNG", ".jpeg" or ".JPEG", ".tiff" or ".TIFF", ".bmp" or ".BMP")): # <- Bug probe inserted (".uppercase won't be detected")
                 info(f"Processing file: {self.file}")
                 img = imread(f"{self.path}/{self.file}")   
                 deepsplit(img, self.frame_count, self.process).deepSplit_processed()
-                self.process.up_framecount()
-            elif self.file.endswith((".avi", ".mp4", ".mov", ".flv")): # <- Bug probe inserted (".uppercase won't be detected")
+                self.frame_count.up_framecount()
+            elif self.file.endswith((".avi" or ".AVI", ".mp4" or ".MP4", ".mov" or ".MOV", ".flv" or ".FLV")):
                 info(f"Processing video: {self.file}")
                 cap = VideoCapture(f"{self.path}/{self.file}")
                 while cap.isOpened():
@@ -112,36 +113,9 @@ class lastly:
                 cap.release()
                 destroyAllWindows()
 
-""" def lastly(folder_path, current_frame_count):
-    items = listdir(folder_path)
-    files = [item for item in items if path.isfile(path.join(folder_path, item))]
-    info(f"Files in directory: {files}")
-    processed_path = GetCWD(f"{folder_path}\processed_imgs").newdir()
-    print(f"Processed path: {processed_path}")
-    for file in files:
-        if file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")):
+def main():
+    data_path = f"{getcwd()}\data"
+    lastly(data_path, global_framecount()).execute()
 
-            info(f"Processing file: {file}")
-
-            img = imread(f"{folder_path}/{file}")
-
-            deepsplit(img, current_frame_count, processed_path).deepSplit_processed()
-
-            current_frame_count.up_framecount()
-            
-        elif file.endswith((".avi", ".mp4", ".mov", ".flv")):
-            info(f"Processing video: {file}")
-            cap = VideoCapture(f"{folder_path}/{file}")
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if ret:
-                    deepsplit(frame, current_frame_count, processed_path).deepSplit_processed()
-                    current_frame_count.up_framecount()
-                else:
-                    break
-            cap.release()
-            destroyAllWindows() """
-
-
-data_path = f"{getcwd()}"
-lastly(data_path, global_framecount()).execute()
+if __name__ == "__main__":
+    main()
