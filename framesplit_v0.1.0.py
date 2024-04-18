@@ -30,7 +30,7 @@ class GetCWD:
             if not path.exists(self.joindirw):
                 info(f"Processed img directory {self.fname} created, in {self.dir}")
                 return makedirs(self.joindirw)
-            elif self.fname == None:
+            if self.fname == None:
                 raise systemRecurrsiveNull(f"No directory name provided!")
             return self.joindirw
         except error as oserr:
@@ -77,6 +77,14 @@ class deepsplit:
 
 end = time()
 print(f"Frame Splitter initialized successfully with {end-start}ms!")
+
+class metaClassify:
+    def __init__(self, path, file_name):
+        self.path = path
+        self.dataentry = file_name
+
+    def classify(self):
+        pass
 
 class lastly:
     def __init__(self, folder_path, global_fcount):
