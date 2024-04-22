@@ -6,7 +6,6 @@ from time import time
 print("Initializing Frame Splitter...")
 start = time()
 
-
 class systemRecurrsiveNull:
     pass
 
@@ -26,7 +25,7 @@ class formatClassify:
         self.currentFormat_VIDEO = list(".avi" or ".AVI", ".mp4" or ".MP4", ".mov" or ".MOV", ".flv" or ".FLV")
         self.basename = basename
 
-    def classifyFormat(self):
+    def implement(self):
         if self.basename.endswith(self.currentFormat_IMG):
             return self.basename.endswith
         if self.basename.endswith(self.currentFormat_VIDEO):
@@ -64,7 +63,7 @@ class deepsplit:
         self.green = None
         self.blue = None
         self.gray = None
-        self.file_name = None
+        self.file_name= f"split_frame_{self.current_frame_count}"
 
     def deepSplit_processed(self):
         try:
@@ -72,7 +71,6 @@ class deepsplit:
             self.queue = self.frame.copy()
             self.blue, self.green, self.red = split(self.queue)
             self.gray = cvtColor(self.queue, COLOR_BGR2GRAY)
-            self.file_name= f"split_frame_{self.current_frame_count}"
             self.file_processing()
             print(f"Frame {self.current_frame_count} processed successfully")
 
@@ -94,17 +92,43 @@ end = time()
 print(f"Frame Splitter initialized successfully with {end-start}ms!")
 
 class metaClassify:
-    def __init__(self, path, file_name):
+    def __init__(self, path, count, processed_path):
         self.path = path
-        self.dataentry = file_name
+        self.current_frame_count = count.framecount
+        self.ppath = processed_path
+        self.file_name= None
+        self.data = None
 
     def classify(self):
-        pass
+        self.file_name = f"split_frame_{self.current_frame_count}"
+        with open(self.path, 'r') as file:
+            self.data = file.read()
+            file.close()
+        with open(f"{self.ppath}\{self.file_name}_r.txt", 'w') as file: 
+            file.write(self.data) 
+            file.close()
+        with open(f"{self.ppath}\{self.file_name}_g.txt", 'w') as file: 
+            file.write( self.data)
+            file.close()
+        with open(f"{self.ppath}\{self.file_name}_b.txt", 'w') as file: 
+            file.write(self.data) 
+            file.close()
+        with open(f"{self.ppath}\{self.file_name}_gray.txt", 'w') as file: 
+            file.write(self.data)
+            file.close()
+        with open(f"{self.ppath}\{self.file_name}_normal.txt", 'w') as file: 
+            file.write(self.data)
+            file.close()
+        print(f"Frame {self.current_frame_count} inference data processed successfully")
+
+
+
 
 class lastly:
-    def __init__(self, folder_path, global_fcount):
+    def __init__(self, folder_path, global_fcount, global_fINdex):
         self.path = folder_path
         self.frame_count = global_fcount
+        self.frame_index = global_fINdex
         self.files = None
         self.file = None
         self.current_files = None
@@ -118,14 +142,15 @@ class lastly:
         self.process = GetCWD(f"{self.path}\processed_imgs").newdir()
         print(f"Successfully located processing path: {self.process}")
         for self.file in self.files:
-            if formatClassify(self.file.basename()).classifyFormat() == None:
-                pass
-            if self.file.endswith((".jpg" or ".JPG", ".png" or ".PNG", ".jpeg" or ".JPEG", ".tiff" or ".TIFF", ".bmp" or ".BMP")): # <- Bug probe inserted (".uppercase won't be detected")
+            if self.file.endswith((".jpg", ".JPG", ".png", ".PNG", ".jpeg", ".JPEG", ".tiff", ".TIFF", ".bmp", ".BMP")): # <- Bug probe inserted (".uppercase won't be detected")
                 info(f"Processing file: {self.file}")
                 img = imread(f"{self.path}/{self.file}")   
                 deepsplit(img, self.frame_count, self.process).deepSplit_processed()
                 self.frame_count.up_framecount()
-            elif self.file.endswith((".avi" or ".AVI", ".mp4" or ".MP4", ".mov" or ".MOV", ".flv" or ".FLV")):
+            if self.file.endswith((".txt", ".TXT")):
+                metaClassify(f"{self.path}/{self.file}", self.frame_index, self.process).classify()
+                self.frame_index.up_framecount()
+            elif self.file.endswith((".avi", ".AVI", ".mp4", ".MP4", ".mov", ".MOV", ".flv", ".FLV")):
                 info(f"Processing video: {self.file}")
                 cap = VideoCapture(f"{self.path}/{self.file}")
                 while cap.isOpened():
@@ -140,7 +165,7 @@ class lastly:
 
 def main():
     data_path = f"{getcwd()}\data"
-    lastly(data_path, global_framecount()).execute()
+    lastly(data_path, global_framecount(), global_framecount()).execute()
 
 if __name__ == "__main__":
     main()
