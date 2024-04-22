@@ -6,6 +6,7 @@ from time import time
 print("Initializing Frame Splitter...")
 start = time()
 
+
 class systemRecurrsiveNull:
     pass
 
@@ -18,6 +19,20 @@ class global_framecount:
     def up_framecount(self):
         self.framecount += 1
         return self.framecount
+    
+class formatClassify:
+    def __init__(self, basename):
+        self.currentFormat_IMG = list(".jpg" or ".JPG", ".png" or ".PNG", ".jpeg" or ".JPEG", ".tiff" or ".TIFF", ".bmp" or ".BMP")
+        self.currentFormat_VIDEO = list(".avi" or ".AVI", ".mp4" or ".MP4", ".mov" or ".MOV", ".flv" or ".FLV")
+        self.basename = basename
+
+    def classifyFormat(self):
+        if self.basename.endswith(self.currentFormat_IMG):
+            return self.basename.endswith
+        if self.basename.endswith(self.currentFormat_VIDEO):
+            return self.basename.endswith
+        else:
+            return None
 
 class GetCWD:
     def __init__(self, folder_name) -> str :
@@ -103,6 +118,8 @@ class lastly:
         self.process = GetCWD(f"{self.path}\processed_imgs").newdir()
         print(f"Successfully located processing path: {self.process}")
         for self.file in self.files:
+            if formatClassify(self.file.basename()).classifyFormat() == None:
+                pass
             if self.file.endswith((".jpg" or ".JPG", ".png" or ".PNG", ".jpeg" or ".JPEG", ".tiff" or ".TIFF", ".bmp" or ".BMP")): # <- Bug probe inserted (".uppercase won't be detected")
                 info(f"Processing file: {self.file}")
                 img = imread(f"{self.path}/{self.file}")   
