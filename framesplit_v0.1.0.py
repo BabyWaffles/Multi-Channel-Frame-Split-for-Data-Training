@@ -147,9 +147,7 @@ class lastly:
                 img = imread(f"{self.path}/{self.file}")   
                 deepsplit(img, self.frame_count, self.process).deepSplit_processed()
                 self.frame_count.up_framecount()
-            if self.file.endswith((".txt", ".TXT")):
-                metaClassify(f"{self.path}/{self.file}", self.frame_index, self.process).classify()
-                self.frame_index.up_framecount()
+
             elif self.file.endswith((".avi", ".AVI", ".mp4", ".MP4", ".mov", ".MOV", ".flv", ".FLV")):
                 info(f"Processing video: {self.file}")
                 cap = VideoCapture(f"{self.path}/{self.file}")
@@ -162,6 +160,11 @@ class lastly:
                         break
                 cap.release()
                 destroyAllWindows()
+            if self.file.endswith((".txt", ".TXT")):
+                metaClassify(f"{self.path}/{self.file}", self.frame_index, self.process).classify()
+                self.frame_index.up_framecount()
+            else:
+                pass
 
 def main():
     data_path = f"{getcwd()}\data"
