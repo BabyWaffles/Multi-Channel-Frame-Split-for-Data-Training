@@ -7,7 +7,7 @@ This project is catered to those who need quick and easy methods to take a sourc
 # Current Features
 - Multi-threaded [Removed due to broken implementation]
 - Uses native async modules [Removed due to broken implementation]
-- Uses CV2 and Numpy
+- Uses CV2
 - Low resource consumption
 
 # File Support
@@ -23,3 +23,4 @@ This project is catered to those who need quick and easy methods to take a sourc
 
 [12 April 2024]
 - Enables Auto Annotation of Existing Annotated Coordinates.
+- Improved performance with Auto Annotation*
