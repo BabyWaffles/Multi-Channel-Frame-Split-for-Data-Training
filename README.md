@@ -2,7 +2,7 @@
 Takes an image or a video, split the frames into multiple color spaces and "imwrite" in an output folder
 
 # Data Training Split Frame
-This project is catered to those who need quick and easy methods to take a source and split the current frame into multiple COLOR Channels for DATA Training and inferencing
+This project is catered to those who need quick and easy methods to do frame augmentations into multiple COLOR Channels Frames for DATA Training and inferencing
 
 # Current Features
 - Multi-threaded [Removed due to broken implementation]
