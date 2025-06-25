@@ -25,7 +25,7 @@ def new_directory(folder_name):
         logging.error(f"Recursively returned NULL w/ err: {e}")
         return "NULL"
 
-data_folder = f"{os.getcwd()}\cvat-dataInference"
+data_folder = os.path.join(os.getcwd(), "cvat-dataInference")
 #processed_path = f"{data_folder}\processed_imgs" #f"{new_directory("cvat-dataInference\processed_imgs")}"
 
 class deepsplitting:
@@ -59,21 +59,19 @@ class threadings:
         print("Threads completed successfully")
         
 
-def file_write(path, file_name, r,g,b,gray, normal):
-    with open(path + file_name, 'w') as f:
-        cv2.imwrite(f"{path}/{file_name}_r.jpg", r)
-        cv2.imwrite(f"{path}/{file_name}_g.jpg", g)
-        cv2.imwrite(f"{path}/{file_name}_b.jpg", b)
-        cv2.imwrite(f"{path}/{file_name}_gray.jpg", gray)
-        cv2.imwrite(f"{path}/{file_name}_normal.jpg", normal)
-        logging.info(f"Frames written successfully {file_name}")
-        f.close()
+def file_write(path, file_name, r, g, b, gray, normal):
+    cv2.imwrite(os.path.join(path, f"{file_name}_r.jpg"), r)
+    cv2.imwrite(os.path.join(path, f"{file_name}_g.jpg"), g)
+    cv2.imwrite(os.path.join(path, f"{file_name}_b.jpg"), b)
+    cv2.imwrite(os.path.join(path, f"{file_name}_gray.jpg"), gray)
+    cv2.imwrite(os.path.join(path, f"{file_name}_normal.jpg"), normal)
+    logging.info(f"Frames written successfully {file_name}")
 
 def call_class_deepsplit(folder_path, current_frame_count):
     items = os.listdir(folder_path)
     files = [item for item in items if os.path.isfile(os.path.join(folder_path, item))]
     logging.info(f"Files in directory: {files}")
-    processed_path = new_directory(f"{folder_path}\processed_imgs")
+    processed_path = new_directory(os.path.join(folder_path, "processed_imgs"))
     print(f"Processed path: {processed_path}")
     for file in files:
         if file.endswith((".jpg", ".png", ".jpeg", ".tiff", ".bmp")):
@@ -86,9 +84,10 @@ def call_class_deepsplit(folder_path, current_frame_count):
             cap = cv2.VideoCapture(f"{folder_path}/{file}")
             while cap.isOpened():
                 ret, frame = cap.read()
-                if ret:
-                    deepsplitting.deepSplit_processed(frame, current_frame_count, processed_path)
-                    current_frame_count += 1
+                if not ret:
+                    break
+                deepsplitting.deepSplit_processed(frame, current_frame_count, processed_path)
+                current_frame_count += 1
             cap.release()
             cv2.destroyAllWindows()
 
